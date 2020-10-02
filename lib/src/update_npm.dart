@@ -40,13 +40,16 @@ Future<void> updateNPM(String versionNumber) async {
     );
   }
 
+  stdout.writeln('Extracting file content');
   final downloadedFileBytes = downloadedFile.readAsBytesSync();
   final tgzDecoder = GZipDecoder().decodeBytes(downloadedFileBytes);
   final activePath =
       globals.config.installedVersions[globals.config.activeVersion]['path'];
   final fileDecoder = TarDecoder().decodeBytes(tgzDecoder);
-
-  final npmDirectory = Directory(activePath + '/node_modules/npm');
+  final npmPath = activePath +
+      (Platform.isMacOS || Platform.isLinux ? '/lib/' : '') +
+      '/node_modules/npm';
+  final npmDirectory = Directory(npmPath);
 
   if (npmDirectory.existsSync()) {
     npmDirectory.deleteSync(recursive: true);
@@ -57,17 +60,15 @@ Future<void> updateNPM(String versionNumber) async {
     List<int> data = file.content;
 
     if (file.isFile) {
-      File(activePath + '/node_modules/$fileName')
+      File(npmPath + '/../$fileName')
         ..createSync(recursive: true)
         ..writeAsBytesSync(data);
     } else {
-      Directory(activePath + '/node_modules/$fileName')
-          .createSync(recursive: true);
+      Directory(npmPath + '/../$fileName').createSync(recursive: true);
     }
   }
 
-  Directory(activePath + '/node_modules/package')
-      .renameSync(activePath + '/node_modules/npm');
+  Directory(npmPath + '/../package').renameSync(npmPath);
 
   stdout.writeln('npm was successfully updated/downgraded to $versionNumber');
 }
