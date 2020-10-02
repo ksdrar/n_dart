@@ -60,7 +60,7 @@ Future<void> downloadVersion(String versionNumber) async {
 }
 
 void extractFile(String versionNumber, String fileName, String fileExtension) {
-  stdout.writeln('Extracting file to ${globals.nHome}/versions');
+  stdout.writeln('Extracting file content');
   final fileBytes = File(globals.nHome + '/.cache/$fileName.$fileExtension')
       .readAsBytesSync();
   var fileDecoder;

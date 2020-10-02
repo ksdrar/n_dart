@@ -15,4 +15,5 @@ void uninstallVersion(String versionNumber) {
   Directory(globals.config.installedVersions[versionNumber]['path'])
       .deleteSync(recursive: true);
   globals.config.installedVersions.remove(versionNumber);
+  stdout.writeln('Version $versionNumber was successfully uninstalled');
 }

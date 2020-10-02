@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 Future<void> listRemote() async {
@@ -11,6 +12,7 @@ Future<void> listRemote() async {
     return;
   }
 
+  stdout.writeln('Last 3 releases of major NodeJS versions');
   final remoteVersions =
       (json.decode(request.body) as List<dynamic>).cast<String>();
 
