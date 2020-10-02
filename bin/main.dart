@@ -20,6 +20,11 @@ void main(List<String> arguments) async {
 
   await getConfig();
 
+  if (arguments.isEmpty) {
+    printHelp();
+    return;
+  }
+
   switch (arguments[0]) {
     case 'i':
     case 'install':
@@ -60,5 +65,24 @@ void main(List<String> arguments) async {
     case 'update-npm':
       await updateNPM(arguments[1]);
       break;
+    case '--h':
+    case '--help':
+    case 'help':
+      printHelp();
+      break;
+    default:
+      stdout.writeln('Command ${arguments[0]} is not valid');
+      break;
   }
+}
+
+void printHelp() {
+  const help = 'Usage: n_dart <command>\n\n'
+      'n_dart install <version>     install the selected NodeJS version\n'
+      'n_dart uninstall <version>   remove the selected NodeJS version\n'
+      'n_dart use <version>         change the active version to the selected one\n'
+      'n_dart list-local            list installed versions\n'
+      'n_dart list-remote           list last 3 releases of major NodeJS versions\n'
+      'n_dart update-npm <version>  update npm version of active NodeJS version\n';
+  stdout.writeln(help);
 }
