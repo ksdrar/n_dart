@@ -18,12 +18,12 @@ void main(List<String> arguments) async {
     return;
   }
 
-  await getConfig();
-
   if (arguments.isEmpty) {
     printHelp();
     return;
   }
+
+  await getConfig();
 
   switch (arguments[0]) {
     case 'i':
@@ -37,8 +37,11 @@ void main(List<String> arguments) async {
       await saveConfig();
       break;
     case 'use':
-      if (globals.config.installedVersions[arguments[1]] == null) {
+      if (!globals.config.installedVersions.containsKey(arguments[1])) {
         stdout.writeln('Version ${arguments[1]} is not installed');
+        break;
+      } else if (arguments[1] == globals.config.activeVersion) {
+        stdout.writeln('Version ${arguments[1]} is already active');
         break;
       }
 
@@ -48,15 +51,16 @@ void main(List<String> arguments) async {
     case 'ls':
     case 'list-local':
       stdout.writeln('Installed versions:');
-      final versionsList = globals.config.installedVersions.entries
-          .map((e) => e.key + (e.value['isActive'] ? ' - active' : ''))
-          .toList();
+      final versionsList = [
+        for (var entry in globals.config.installedVersions.entries)
+          entry.key + (entry.value.isActive ? ' - active' : '')
+      ];
       versionsList.sort();
-      versionsList.forEach(
-        (element) {
-          stdout.writeln(element);
-        },
-      );
+
+      for (var version in versionsList) {
+        stdout.writeln(version);
+      }
+
       break;
     case 'lsr':
     case 'list-remote':
