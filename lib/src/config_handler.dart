@@ -15,7 +15,23 @@ Future<void> getConfig() async {
         'List of available architectures: '
         'x86, x64, arm64*, armv7l*, ppc64le*, s390x*'
         '\n\n*Linux only');
-    final arch = stdin.readLineSync();
+    final validArchitectures = [
+      'x86',
+      'x64',
+      'arm64',
+      'armv7l',
+      'ppc64le',
+      's390x'
+    ];
+    var arch = '';
+    while (!validArchitectures.contains(arch)) {
+      arch = stdin.readLineSync();
+
+      if (!validArchitectures.contains(arch)) {
+        stdout.writeln('$arch is not a valid input, try again.');
+      }
+    }
+
     globals.config = globals.Config(arch: arch, installedVersions: {});
     await saveConfig();
     stdout.write('\n');
