@@ -15,15 +15,15 @@ void setAsActive(String versionNumber) {
     symLink.deleteSync();
   }
 
-  symLink.createSync(globals.config.installedVersions[versionNumber]['path'] +
+  symLink.createSync(globals.config.installedVersions[versionNumber].path +
       (Platform.isMacOS || Platform.isLinux ? '/bin' : ''));
 
   // If active version is not null, then change that version isActive property
   if (globals.config.activeVersion != null) {
-    globals.config.installedVersions[globals.config.activeVersion]['isActive'] =
+    globals.config.installedVersions[globals.config.activeVersion].isActive =
         false;
   }
 
-  globals.config.installedVersions[versionNumber]['isActive'] = true;
+  globals.config.installedVersions[versionNumber].isActive = true;
   globals.config.activeVersion = versionNumber;
 }

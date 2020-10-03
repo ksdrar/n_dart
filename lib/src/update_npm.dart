@@ -44,7 +44,7 @@ Future<void> updateNPM(String versionNumber) async {
   final downloadedFileBytes = downloadedFile.readAsBytesSync();
   final tgzDecoder = GZipDecoder().decodeBytes(downloadedFileBytes);
   final activePath =
-      globals.config.installedVersions[globals.config.activeVersion]['path'];
+      globals.config.installedVersions[globals.config.activeVersion].path;
   final fileDecoder = TarDecoder().decodeBytes(tgzDecoder);
   final npmPath = activePath +
       (Platform.isMacOS || Platform.isLinux ? '/lib/' : '') +

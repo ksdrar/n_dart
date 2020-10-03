@@ -17,10 +17,9 @@ void installVersion(String versionNumber) async {
     return;
   }
 
-  globals.config.installedVersions[versionNumber] = {
-    'isActive': globals.config.activeVersion == null ? true : false,
-    'path': globals.nHome + '/versions/$versionNumber'
-  };
+  globals.config.installedVersions[versionNumber] = globals.Version(
+      globals.config.activeVersion == null ? true : false,
+      globals.nHome + '/versions/$versionNumber');
 
   if (globals.config.activeVersion == null) {
     stdout.writeln('Setting $versionNumber as active version');
