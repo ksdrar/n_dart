@@ -11,7 +11,11 @@ void getNHome() {
   }
 
   globals.nHome = nHome
-      .replaceAll('~', Platform.environment['USERPROFILE'])
+      .replaceAll(
+          '~',
+          Platform.isLinux || Platform.isMacOS
+              ? Platform.environment['HOME']
+              : Platform.environment['USERPROFILE'])
       .replaceAll('\\', '/');
 
   if (!Directory(nHome).existsSync()) {
@@ -20,5 +24,9 @@ void getNHome() {
 
   if (Directory(nHome + '/.cache').existsSync()) {
     Directory(nHome + '/.cache').createSync();
+  }
+
+  if (Directory(nHome + '/versions').existsSync()) {
+    Directory(nHome + '/versions').createSync();
   }
 }
