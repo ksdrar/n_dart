@@ -6,26 +6,26 @@ import 'package:n_dart/src/globals.dart' as globals;
 
 Future<void> downloadVersion(String versionNumber) async {
   var url = 'https://nodejs.org/dist/v';
-  String fileName;
-  String fileExtension;
+  String downloadName;
+  String downloadExtension;
 
   if (Platform.isWindows) {
-    fileName = 'node-v$versionNumber-win-${globals.config.arch}';
-    fileExtension = 'zip';
-    url += '$versionNumber/$fileName.$fileExtension';
+    downloadName = 'node-v$versionNumber-win-${globals.config.arch}';
+    downloadExtension = 'zip';
   } else if (Platform.isLinux) {
-    fileName = 'node-v$versionNumber-linux-${globals.config.arch}';
-    fileExtension = 'tar.xz';
-    url += '$versionNumber/$fileName.$fileExtension';
+    downloadName = 'node-v$versionNumber-linux-${globals.config.arch}';
+    downloadExtension = 'tar.xz';
   } else if (Platform.isMacOS) {
-    fileName = 'node-v$versionNumber-darwin-${globals.config.arch}';
-    fileExtension = 'tar.xz';
-    url += '$versionNumber/$fileName.$fileExtension';
+    downloadName = 'node-v$versionNumber-darwin-${globals.config.arch}';
+    downloadExtension = 'tar.xz';
   }
 
-  if (await File(globals.nHome + '/.cache/$fileName.$fileExtension').exists()) {
+  url += '$versionNumber/$downloadName.$downloadExtension';
+
+  if (File(globals.nHome + '/.cache/$downloadName.$downloadExtension')
+      .existsSync()) {
     stdout.writeln('Cached file found, using it instead');
-    extractFile(versionNumber, fileName, fileExtension);
+    extractFile(versionNumber, downloadName, downloadExtension);
     return;
   }
 
@@ -40,53 +40,52 @@ Future<void> downloadVersion(String versionNumber) async {
         fileSize = (int.parse(response.headers['content-length']) / 1e+6)
                 .toStringAsFixed(2) +
             ' MB';
-        return true;
       }
     },
   );
 
   stdout.writeln(
-      'Downloading $fileName.$fileExtension ($fileSize), this may take some time.');
+      'Downloading $downloadName.$downloadExtension ($fileSize), this may take some time.');
   await http.get(url).then(
     (response) {
       stdout.writeln(response.contentLength);
       if (response.statusCode == 200) {
-        File(globals.nHome + '/.cache/$fileName.$fileExtension')
+        File(globals.nHome + '/.cache/$downloadName.$downloadExtension')
             .writeAsBytesSync(response.bodyBytes);
       }
     },
   );
-  extractFile(versionNumber, fileName, fileExtension);
+  extractFile(versionNumber, downloadName, downloadExtension);
 }
 
-void extractFile(String versionNumber, String fileName, String fileExtension) {
+void extractFile(
+    String versionNumber, String downloadName, String downloadExtension) {
   stdout.writeln('Extracting file content');
-  final fileBytes = File(globals.nHome + '/.cache/$fileName.$fileExtension')
-      .readAsBytesSync();
+  final fileBytes =
+      File(globals.nHome + '/.cache/$downloadName.$downloadExtension')
+          .readAsBytesSync();
   var fileDecoder;
 
-  switch (fileExtension) {
+  switch (downloadExtension) {
     case 'zip':
       fileDecoder = ZipDecoder().decodeBytes(fileBytes);
       break;
     case 'tar.xz':
       fileDecoder = TarDecoder().decodeBytes(fileBytes);
+      break;
   }
 
   for (ArchiveFile file in fileDecoder) {
-    var fileName = file.name;
-    List<int> data = file.content;
-
     if (file.isFile) {
-      File(globals.nHome + '/versions/$fileName')
+      File(globals.nHome + '/versions/${file.name}')
         ..createSync(recursive: true)
-        ..writeAsBytesSync(data);
+        ..writeAsBytesSync(file.content);
     } else {
-      Directory(globals.nHome + '/versions/$fileName')
+      Directory(globals.nHome + '/versions/$file.name')
           .createSync(recursive: true);
     }
   }
 
-  Directory(globals.nHome + '/versions/$fileName')
+  Directory(globals.nHome + '/versions/$downloadName')
       .renameSync(globals.nHome + '/versions/$versionNumber');
 }

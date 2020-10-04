@@ -32,7 +32,6 @@ Future<void> updateNPM(String versionNumber) async {
         'Downloading npm-${versionNumber}.tgz ($fileSize), this may take some time.');
     await http.get(url).then(
       (response) {
-        stdout.writeln(response.contentLength);
         if (response.statusCode == 200) {
           downloadedFile.writeAsBytesSync(response.bodyBytes);
         }
@@ -55,20 +54,16 @@ Future<void> updateNPM(String versionNumber) async {
     npmDirectory.deleteSync(recursive: true);
   }
 
-  for (var file in fileDecoder) {
-    var fileName = file.name;
-    List<int> data = file.content;
-
+  for (final file in fileDecoder) {
     if (file.isFile) {
-      File(npmPath + '/../$fileName')
+      File(npmPath + '/../${file.name}')
         ..createSync(recursive: true)
-        ..writeAsBytesSync(data);
+        ..writeAsBytesSync(file.content);
     } else {
-      Directory(npmPath + '/../$fileName').createSync(recursive: true);
+      Directory(npmPath + '/../$file.name').createSync(recursive: true);
     }
   }
 
   Directory(npmPath + '/../package').renameSync(npmPath);
-
   stdout.writeln('npm was successfully updated/downgraded to $versionNumber');
 }

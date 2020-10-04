@@ -21,7 +21,7 @@ class Config {
       arch: json['arch'],
       activeVersion: json['activeVersion'],
       installedVersions: <String, Version>{
-        for (var entry
+        for (final entry
             in (json['installedVersions'] as Map<String, dynamic>).entries)
           entry.key: Version.fromJson(entry.value)
       },

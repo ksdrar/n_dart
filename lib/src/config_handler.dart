@@ -10,7 +10,7 @@ Future<void> getConfig() async {
         .then((sourceString) => jsonDecode(sourceString))
         .then((value) => value);
     globals.config = globals.Config.fromJson(savedConfig);
-  } catch (e) {
+  } on FileSystemException {
     stdout.writeln('Type the architecture you want to use\n'
         'List of available architectures: '
         'x86, x64, arm64*, armv7l*, ppc64le*, s390x*'

@@ -52,12 +52,12 @@ void main(List<String> arguments) async {
     case 'list-local':
       stdout.writeln('Installed versions:');
       final versionsList = [
-        for (var entry in globals.config.installedVersions.entries)
+        for (final entry in globals.config.installedVersions.entries)
           entry.key + (entry.value.isActive ? ' - active' : '')
       ];
       versionsList.sort();
 
-      for (var version in versionsList) {
+      for (final version in versionsList) {
         stdout.writeln(version);
       }
 

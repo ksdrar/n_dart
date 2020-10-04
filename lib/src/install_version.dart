@@ -5,7 +5,7 @@ import 'package:n_dart/src/globals.dart' as globals;
 import 'package:n_dart/src/set_as_active.dart';
 
 void installVersion(String versionNumber) async {
-  if (globals.config.installedVersions[versionNumber] != null) {
+  if (globals.config.installedVersions.containsKey(versionNumber)) {
     stdout.writeln('Version $versionNumber is already installed');
     return;
   }
@@ -18,8 +18,9 @@ void installVersion(String versionNumber) async {
   }
 
   globals.config.installedVersions[versionNumber] = globals.Version(
-      globals.config.activeVersion == null ? true : false,
-      globals.nHome + '/versions/$versionNumber');
+    globals.config.activeVersion == null ? true : false,
+    globals.nHome + '/versions/$versionNumber',
+  );
 
   if (globals.config.activeVersion == null) {
     stdout.writeln('Setting $versionNumber as active version');
