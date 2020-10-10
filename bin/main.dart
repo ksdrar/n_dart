@@ -9,7 +9,7 @@ import 'package:n_dart/src/set_as_active.dart';
 import 'package:n_dart/src/uninstall_version.dart';
 import 'package:n_dart/src/update_npm.dart';
 
-void main(List<String> arguments) async {
+Future<void> main(List<String> arguments) async {
   getNHome();
 
   if (globals.nHome == '') {
