@@ -85,7 +85,7 @@ void extractFile(
         ..createSync(recursive: true)
         ..writeAsBytesSync(file.content);
     } else {
-      Directory(globals.nHome + '/versions/$file.name')
+      Directory(globals.nHome + '/versions/${file.name}')
           .createSync(recursive: true);
     }
   }
