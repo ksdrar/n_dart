@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:n_dart/src/globals.dart' as globals;
+import 'package:path/path.dart' as path;
 
 void getNHome() {
   final nHome = Platform.environment['N_HOME'];
@@ -10,23 +11,20 @@ void getNHome() {
     return;
   }
 
-  globals.nHome = nHome
-      .replaceAll(
-          '~',
-          Platform.isLinux || Platform.isMacOS
-              ? Platform.environment['HOME']
-              : Platform.environment['USERPROFILE'])
-      .replaceAll('\\', '/');
+  globals.nHome = path.canonicalize(
+    nHome.replaceAll(
+      '~',
+      Platform.isWindows
+          ? Platform.environment['USERPROFILE']
+          : Platform.environment['HOME'],
+    ),
+  );
 
-  if (!Directory(nHome).existsSync()) {
-    Directory(nHome).createSync();
-  }
+  const directories = ['', '.cache', 'versions'];
 
-  if (Directory(nHome + '/.cache').existsSync()) {
-    Directory(nHome + '/.cache').createSync();
-  }
-
-  if (Directory(nHome + '/versions').existsSync()) {
-    Directory(nHome + '/versions').createSync();
+  for (final dir in directories) {
+    if (!Directory(path.join(globals.nHome, dir)).existsSync()) {
+      Directory(path.join(globals.nHome, dir)).createSync();
+    }
   }
 }

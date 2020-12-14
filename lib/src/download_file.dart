@@ -2,17 +2,32 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:n_dart/src/globals.dart' as globals;
+import 'package:path/path.dart' as path;
 
 class FileNotAvailable implements Exception {
-  FileNotAvailable(String s);
+  String message;
+
+  FileNotAvailable(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 class DownloadError implements Exception {
-  DownloadError(String s);
+  String message;
+
+  DownloadError(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 Future<void> downloadFile(String url, String fileName, String version) async {
-  final file = File(globals.nHome + '/.cache/$fileName');
+  final file = File(path.join(globals.nHome, '.cache', fileName));
 
   if (file.existsSync()) {
     stdout.writeln('Cached file found.');
