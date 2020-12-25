@@ -13,35 +13,20 @@ Future<void> listRemote() async {
 
   stdout.writeln('Last 3 releases of major NodeJS versions: \n');
   final remoteVersions = (json.decode(request.body) as List<dynamic>);
-  final versions = parseIndexJSON(remoteVersions);
+  final versionIteration = <String, int>{};
 
-  for (final entry in versions) {
-    stdout.writeln(entry);
-  }
-}
+  for (final entry in remoteVersions) {
+    final major = entry['version'].substring(1).split('.')[0];
+    if (int.parse(major) < 8) break;
+    if (versionIteration[major] == null) {
+      versionIteration[major] = 0;
+    }
+    if (versionIteration[major] > 2) continue;
 
-List<String> parseIndexJSON(List<dynamic> indexJSON) {
-  final versionMap = <String, int>{};
-  final versionList = <String>[];
-
-  for (final entry in indexJSON) {
-    final version = entry['version'] as String;
-    final major = version.split('.')[0];
+    versionIteration[major] += 1;
     final isLTS = entry['lts'] == false ? false : true;
 
-    if (int.parse(major.substring(1)) < 8) {
-      break;
-    }
-
-    if (versionMap[major] == null) {
-      versionMap[major] = 1;
-    }
-
-    if (versionMap[major] <= 3) {
-      versionMap[major] += 1;
-      versionList.add(version.substring(1) + (isLTS ? ' - LTS' : ''));
-    }
+    stdout.writeln(entry['version'].substring(1) +
+        (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));
   }
-
-  return versionList;
 }
