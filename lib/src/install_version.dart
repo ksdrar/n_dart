@@ -13,15 +13,8 @@ Future<void> installVersion(String versionNumber) async {
   }
 
   var url = 'https://nodejs.org/dist/v';
-  final downloadName = 'node-v$versionNumber-' +
-      (Platform.isWindows
-          ? 'win'
-          : Platform.isLinux
-              ? 'linux'
-              : Platform.isMacOS
-                  ? 'darwin'
-                  : '') +
-      '-${globals.config.arch}';
+  final downloadName =
+      '${'node-v$versionNumber-'}${Platform.isWindows ? 'win' : Platform.isLinux ? 'linux' : Platform.isMacOS ? 'darwin' : ''}${'-${globals.config.arch}'}';
   final downloadExtension = Platform.isWindows ? 'zip' : 'tar.xz';
 
   url += '$versionNumber/$downloadName.$downloadExtension';
@@ -41,7 +34,7 @@ Future<void> installVersion(String versionNumber) async {
     final fileBytes = File(
       path.join(globals.nHome, '.cache', '$downloadName.$downloadExtension'),
     ).readAsBytesSync();
-    var fileDecoder;
+    Archive fileDecoder;
 
     switch (downloadExtension) {
       case 'zip':
@@ -52,13 +45,13 @@ Future<void> installVersion(String versionNumber) async {
         break;
     }
 
-    for (ArchiveFile file in fileDecoder) {
+    for (final file in fileDecoder) {
       if (file.isFile) {
         File(
           path.join(globals.nHome, 'versions', file.name),
         )
           ..createSync(recursive: true)
-          ..writeAsBytesSync(file.content);
+          ..writeAsBytesSync(file.content as List<int>);
       } else {
         Directory(
           path.join(globals.nHome, 'versions', file.name),
@@ -76,9 +69,8 @@ Future<void> installVersion(String versionNumber) async {
   }
 
   globals.config.installedVersions[versionNumber] = globals.Version(
-    globals.config.activeVersion == null ? true : false,
-    path.join(globals.nHome, 'versions', versionNumber),
-  );
+      path.join(globals.nHome, 'versions', versionNumber),
+      isActive: globals.config.activeVersion == null);
 
   if (globals.config.activeVersion == null) {
     stdout.writeln('Setting $versionNumber as active version');

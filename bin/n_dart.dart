@@ -13,7 +13,7 @@ Future<void> main(List<String> arguments) async {
   getNHome();
 
   if (globals.nHome == '') {
-    print('N_HOME is not defined');
+    stdout.writeln('N_HOME is not defined');
     exitCode = 1;
     return;
   }
@@ -29,12 +29,12 @@ Future<void> main(List<String> arguments) async {
     case 'i':
     case 'install':
       await installVersion(arguments[1]);
-      await saveConfig();
+      saveConfig();
       break;
     case 'un':
     case 'uninstall':
-      await uninstallVersion(arguments[1]);
-      await saveConfig();
+      uninstallVersion(arguments[1]);
+      saveConfig();
       break;
     case 'use':
       if (!globals.config.installedVersions.containsKey(arguments[1])) {
@@ -45,8 +45,8 @@ Future<void> main(List<String> arguments) async {
         break;
       }
 
-      await setAsActive(arguments[1]);
-      await saveConfig();
+      setAsActive(arguments[1]);
+      saveConfig();
       break;
     case 'ls':
     case 'list-local':

@@ -19,7 +19,7 @@ void setAsActive(String versionNumber) {
   symLink.createSync(
     path.join(
       globals.config.installedVersions[versionNumber].path,
-      (Platform.isWindows ? '' : 'bin'),
+      Platform.isWindows ? '' : 'bin',
     ),
   );
 

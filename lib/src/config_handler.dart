@@ -8,8 +8,8 @@ Future<void> getConfig() async {
   final savedConfig = File(path.join(globals.nHome, 'config.json'));
 
   if (await savedConfig.exists()) {
-    globals.config =
-        globals.Config.fromJson(jsonDecode(await savedConfig.readAsString()));
+    globals.config = globals.Config.fromJson(
+        jsonDecode(await savedConfig.readAsString()) as Map<String, dynamic>);
     return;
   }
 
@@ -35,7 +35,7 @@ Future<void> getConfig() async {
   }
 
   globals.config = globals.Config(arch: arch, installedVersions: {});
-  await saveConfig();
+  saveConfig();
   stdout.write('\n');
 }
 

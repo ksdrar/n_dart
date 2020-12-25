@@ -2,10 +2,10 @@ class Version {
   bool isActive;
   String path;
 
-  Version(this.isActive, this.path);
+  Version(this.path, {this.isActive});
 
   factory Version.fromJson(Map<String, dynamic> json) {
-    return Version(json['isActive'], json['path']);
+    return Version(json['path'] as String, isActive: json['isActive'] as bool);
   }
 
   Map<String, dynamic> toJson() {
@@ -22,12 +22,12 @@ class Config {
 
   factory Config.fromJson(Map<String, dynamic> json) {
     return Config(
-      arch: json['arch'],
-      activeVersion: json['activeVersion'],
+      arch: json['arch'] as String,
+      activeVersion: json['activeVersion'] as String,
       installedVersions: <String, Version>{
         for (final entry
             in (json['installedVersions'] as Map<String, dynamic>).entries)
-          entry.key: Version.fromJson(entry.value)
+          entry.key: Version.fromJson(entry.value as Map<String, dynamic>)
       },
     );
   }
@@ -37,7 +37,7 @@ class Config {
       'arch': arch,
       'activeVersion': activeVersion,
       'installedVersions': <String, dynamic>{
-        for (final entry in (installedVersions.entries))
+        for (final entry in installedVersions.entries)
           entry.key: entry.value.toJson()
       }
     };
