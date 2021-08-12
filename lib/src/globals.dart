@@ -25,8 +25,7 @@ class Config {
       arch: json['arch'] as String,
       activeVersion: json['activeVersion'] as String,
       installedVersions: <String, Version>{
-        for (final entry
-            in (json['installedVersions'] as Map<String, dynamic>).entries)
+        for (final entry in (json['installedVersions'] as Map<String, dynamic>).entries)
           entry.key: Version.fromJson(entry.value as Map<String, dynamic>)
       },
     );
@@ -37,8 +36,7 @@ class Config {
       'arch': arch,
       'activeVersion': activeVersion,
       'installedVersions': <String, dynamic>{
-        for (final entry in installedVersions.entries)
-          entry.key: entry.value.toJson()
+        for (final entry in installedVersions.entries) entry.key: entry.value.toJson()
       }
     };
   }

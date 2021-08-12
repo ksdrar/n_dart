@@ -25,8 +25,7 @@ void setAsActive(String versionNumber) {
 
   // If active version is not null, then change that version isActive property
   if (globals.config.activeVersion != null) {
-    globals.config.installedVersions[globals.config.activeVersion].isActive =
-        false;
+    globals.config.installedVersions[globals.config.activeVersion].isActive = false;
   }
 
   globals.config.installedVersions[versionNumber].isActive = true;

@@ -17,14 +17,7 @@ Future<void> getConfig() async {
       'List of available architectures: '
       'x86, x64, arm64*, armv7l*, ppc64le*, s390x*'
       '\n\n*Linux only');
-  final validArchitectures = [
-    'x86',
-    'x64',
-    'arm64',
-    'armv7l',
-    'ppc64le',
-    's390x'
-  ];
+  final validArchitectures = ['x86', 'x64', 'arm64', 'armv7l', 'ppc64le', 's390x'];
   var arch = '';
   while (!validArchitectures.contains(arch)) {
     arch = stdin.readLineSync();
@@ -44,7 +37,6 @@ void saveConfig() {
     File(path.join(globals.nHome, 'config.json'))
         .writeAsStringSync(jsonEncode(globals.config.toJson()));
   } catch (e) {
-    stdout
-        .writeln('Error writing to ${path.join(globals.nHome, 'config.json')}');
+    stdout.writeln('Error writing to ${path.join(globals.nHome, 'config.json')}');
   }
 }

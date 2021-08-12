@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 Future<void> listRemote() async {
@@ -26,7 +27,6 @@ Future<void> listRemote() async {
     versionIteration[major] += 1;
     final isLTS = entry['lts'] != false;
 
-    stdout.writeln(entry['version'].substring(1) +
-        (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));
+    stdout.writeln(entry['version'].substring(1) + (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));
   }
 }

@@ -14,9 +14,7 @@ void getNHome() {
   globals.nHome = path.canonicalize(
     nHome.replaceAll(
       '~',
-      Platform.isWindows
-          ? Platform.environment['USERPROFILE']
-          : Platform.environment['HOME'],
+      Platform.isWindows ? Platform.environment['USERPROFILE'] : Platform.environment['HOME'],
     ),
   );
 
