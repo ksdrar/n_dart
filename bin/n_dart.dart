@@ -1,58 +1,55 @@
 import 'dart:io';
 
-import 'package:n_dart/src/config_handler.dart';
-import 'package:n_dart/src/get_n_home.dart';
-import 'package:n_dart/src/globals.dart' as globals;
+import 'package:n_dart/src/globals.dart';
 import 'package:n_dart/src/install_version.dart';
 import 'package:n_dart/src/list_remote.dart';
 import 'package:n_dart/src/set_as_active.dart';
 import 'package:n_dart/src/uninstall_version.dart';
 import 'package:n_dart/src/update_npm.dart';
+import 'package:path/path.dart' as path;
 
 Future<void> main(List<String> arguments) async {
-  getNHome();
-
-  if (globals.nHome == '') {
-    stdout.writeln('N_HOME is not defined');
-    exitCode = 1;
-    return;
-  }
-
   if (arguments.isEmpty) {
     printHelp();
     return;
   }
 
-  await getConfig();
+  const directories = ['', '.cache', 'versions'];
+
+  for (final dir in directories) {
+    if (!Directory(path.join(home, dir)).existsSync()) {
+      Directory(path.join(home, dir)).createSync();
+    }
+  }
 
   switch (arguments[0]) {
     case 'i':
     case 'install':
       await installVersion(arguments[1]);
-      saveConfig();
+      config.saveToDisk();
       break;
     case 'un':
     case 'uninstall':
       uninstallVersion(arguments[1]);
-      saveConfig();
+      config.saveToDisk();
       break;
     case 'use':
-      if (!globals.config.installedVersions.containsKey(arguments[1])) {
+      if (!config.installedVersions.containsKey(arguments[1])) {
         stdout.writeln('Version ${arguments[1]} is not installed');
         break;
-      } else if (arguments[1] == globals.config.activeVersion) {
+      } else if (arguments[1] == config.activeVersion) {
         stdout.writeln('Version ${arguments[1]} is already active');
         break;
       }
 
       setAsActive(arguments[1]);
-      saveConfig();
+      config.saveToDisk();
       break;
     case 'ls':
     case 'list-local':
       stdout.writeln('Installed versions:');
       final versionsList = [
-        for (final entry in globals.config.installedVersions.entries)
+        for (final entry in config.installedVersions.entries)
           entry.key + (entry.value.isActive ? ' - active' : '')
       ];
       versionsList.sort();

@@ -2,19 +2,20 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:n_dart/src/download_file.dart';
-import 'package:n_dart/src/globals.dart' as globals;
+import 'package:n_dart/src/globals.dart';
 import 'package:n_dart/src/set_as_active.dart';
+import 'package:n_dart/src/version.dart';
 import 'package:path/path.dart' as path;
 
 Future<void> installVersion(String versionNumber) async {
-  if (globals.config.installedVersions.containsKey(versionNumber)) {
+  if (config.installedVersions.containsKey(versionNumber)) {
     stdout.writeln('Version $versionNumber is already installed');
     return;
   }
 
   var url = 'https://nodejs.org/dist/v';
   final downloadName =
-      '${'node-v$versionNumber-'}${Platform.isWindows ? 'win' : Platform.isLinux ? 'linux' : Platform.isMacOS ? 'darwin' : ''}${'-${globals.config.arch}'}';
+      '${'node-v$versionNumber-'}${Platform.isWindows ? 'win' : Platform.isLinux ? 'linux' : Platform.isMacOS ? 'darwin' : ''}${'-${config.arch}'}';
   final downloadExtension = Platform.isWindows ? 'zip' : 'tar.xz';
 
   url += '$versionNumber/$downloadName.$downloadExtension';
@@ -32,7 +33,7 @@ Future<void> installVersion(String versionNumber) async {
   try {
     stdout.writeln('Extracting file content');
     final fileBytes = File(
-      path.join(globals.nHome, '.cache', '$downloadName.$downloadExtension'),
+      path.join(home, '.cache', '$downloadName.$downloadExtension'),
     ).readAsBytesSync();
 
     Archive fileDecoder;
@@ -52,19 +53,19 @@ Future<void> installVersion(String versionNumber) async {
     for (final file in fileDecoder) {
       if (file.isFile) {
         File(
-          path.join(globals.nHome, 'versions', file.name),
+          path.join(home, 'versions', file.name),
         )
           ..createSync(recursive: true)
           ..writeAsBytesSync(file.content as List<int>);
       } else {
         Directory(
-          path.join(globals.nHome, 'versions', file.name),
+          path.join(home, 'versions', file.name),
         ).createSync(recursive: true);
       }
     }
 
-    Directory(path.join(globals.nHome, 'versions', downloadName)).renameSync(
-      path.join(globals.nHome, 'versions', versionNumber),
+    Directory(path.join(home, 'versions', downloadName)).renameSync(
+      path.join(home, 'versions', versionNumber),
     );
   } catch (e) {
     stdout.writeln(e.toString());
@@ -72,11 +73,10 @@ Future<void> installVersion(String versionNumber) async {
     return;
   }
 
-  globals.config.installedVersions[versionNumber] = globals.Version(
-      path.join(globals.nHome, 'versions', versionNumber),
-      isActive: globals.config.activeVersion == '');
+  config.installedVersions[versionNumber] =
+      Version(path.join(home, 'versions', versionNumber), isActive: config.activeVersion == '');
 
-  if (globals.config.activeVersion == '') {
+  if (config.activeVersion == '') {
     stdout.writeln('Setting $versionNumber as active version');
     setAsActive(versionNumber);
   }

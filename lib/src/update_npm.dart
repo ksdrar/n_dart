@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:n_dart/src/download_file.dart';
-import 'package:n_dart/src/globals.dart' as globals;
+import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 
 Future<void> updateNPM(String versionNumber) async {
-  if (globals.config.activeVersion == '') {
+  if (config.activeVersion == '') {
     stdout.write('No active node version found');
     return;
   }
@@ -22,14 +22,14 @@ Future<void> updateNPM(String versionNumber) async {
   }
 
   final downloadedFile = File(
-    path.join(globals.nHome, '.cache', 'npm-$versionNumber.tgz'),
+    path.join(home, '.cache', 'npm-$versionNumber.tgz'),
   );
 
   stdout.writeln('Extracting file content');
   final gZipDecoder = GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
-    globals.config.installedVersions[globals.config.activeVersion]!.path,
+    config.installedVersions[config.activeVersion]!.path,
     Platform.isWindows ? '' : 'bin',
     'node_modules',
     'npm',
