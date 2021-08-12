@@ -21,8 +21,7 @@ Future<void> updateNPM(String versionNumber) async {
   );
 
   stdout.writeln('Extracting file content');
-  final gZipDecoder =
-      GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
+  final gZipDecoder = GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
     globals.config.installedVersions[globals.config.activeVersion].path,
@@ -37,27 +36,20 @@ Future<void> updateNPM(String versionNumber) async {
   }
 
   for (final file in tarDecoder) {
+    file.name = file.name.replaceFirst('package/', '');
+
     if (file.isFile) {
       File(
-        path.normalize(
-          path.join(npmPath, '..', file.name),
-        ),
+        path.join(npmPath, file.name),
       )
         ..createSync(recursive: true)
         ..writeAsBytesSync(file.content as List<int>);
     } else {
       Directory(
-        path.normalize(
-          path.join(npmPath, '..', file.name),
-        ),
+        path.join(npmPath, file.name),
       ).createSync(recursive: true);
     }
   }
 
-  Directory(
-    path.normalize(
-      path.join(npmPath, '..', 'package'),
-    ),
-  ).renameSync(npmPath);
   stdout.writeln('npm was successfully updated/downgraded to $versionNumber');
 }
