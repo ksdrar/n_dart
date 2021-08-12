@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 Future<void> listRemote() async {
   const url = 'https://nodejs.org/dist/index.json';
-  final request = await http.get(url);
+  final request = await http.get(Uri.parse(url));
 
   if (request.statusCode != 200) {
     stdout.writeln('Unexpected error fetching remote versions');

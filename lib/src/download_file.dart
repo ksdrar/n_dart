@@ -34,7 +34,7 @@ Future<void> downloadFile(String url, String fileName, String version) async {
     return;
   }
 
-  var response = await http.head(url);
+  var response = await http.head(Uri.parse(url));
 
   if (response.statusCode == 404) {
     throw FileNotAvailable('Version $version is not available or does not exist');
@@ -48,7 +48,7 @@ Future<void> downloadFile(String url, String fileName, String version) async {
           ? ''
           : '${(int.parse(response.headers['content-length']) / 1e+6).toStringAsFixed(2)} MB)'));
 
-  response = await http.get(url);
+  response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 404) {
     throw FileNotAvailable('Version $version is not available or does not exist');
