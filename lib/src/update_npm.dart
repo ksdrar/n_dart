@@ -6,6 +6,11 @@ import 'package:n_dart/src/globals.dart' as globals;
 import 'package:path/path.dart' as path;
 
 Future<void> updateNPM(String versionNumber) async {
+  if (globals.config.activeVersion == '') {
+    stdout.write('No active node version found');
+    return;
+  }
+
   final url = 'https://registry.npmjs.org/npm/-/npm-$versionNumber.tgz';
 
   try {
@@ -24,7 +29,7 @@ Future<void> updateNPM(String versionNumber) async {
   final gZipDecoder = GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
-    globals.config.installedVersions[globals.config.activeVersion].path,
+    globals.config.installedVersions[globals.config.activeVersion]!.path,
     Platform.isWindows ? '' : 'bin',
     'node_modules',
     'npm',

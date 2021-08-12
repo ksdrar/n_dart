@@ -10,7 +10,10 @@ Future<void> getConfig() async {
   if (await savedConfig.exists()) {
     globals.config = globals.Config.fromJson(
         jsonDecode(await savedConfig.readAsString()) as Map<String, dynamic>);
-    return;
+
+    if (globals.config.arch != '') {
+      return;
+    }
   }
 
   stdout.writeln('Type the architecture you want to use\n'
@@ -18,16 +21,18 @@ Future<void> getConfig() async {
       'x86, x64, arm64*, armv7l*, ppc64le*, s390x*'
       '\n\n*Linux only');
   final validArchitectures = ['x86', 'x64', 'arm64', 'armv7l', 'ppc64le', 's390x'];
+
   var arch = '';
+
   while (!validArchitectures.contains(arch)) {
-    arch = stdin.readLineSync();
+    arch = stdin.readLineSync()!;
 
     if (!validArchitectures.contains(arch)) {
       stdout.writeln('$arch is not a valid input, try again.');
     }
   }
 
-  globals.config = globals.Config(arch: arch, installedVersions: {});
+  globals.config.arch = arch;
   saveConfig();
   stdout.write('\n');
 }

@@ -18,16 +18,16 @@ void setAsActive(String versionNumber) {
 
   symLink.createSync(
     path.join(
-      globals.config.installedVersions[versionNumber].path,
+      globals.config.installedVersions[versionNumber]!.path,
       Platform.isWindows ? '' : 'bin',
     ),
   );
 
   // If active version is not null, then change that version isActive property
-  if (globals.config.activeVersion != null) {
-    globals.config.installedVersions[globals.config.activeVersion].isActive = false;
+  if (globals.config.activeVersion != '') {
+    globals.config.installedVersions[globals.config.activeVersion]!.isActive = false;
   }
 
-  globals.config.installedVersions[versionNumber].isActive = true;
+  globals.config.installedVersions[versionNumber]!.isActive = true;
   globals.config.activeVersion = versionNumber;
 }

@@ -19,12 +19,15 @@ Future<void> listRemote() async {
   for (final entry in remoteVersions) {
     final major = entry['version'].substring(1).split('.')[0] as String;
     if (int.parse(major) < 8) break;
+
     if (versionIteration[major] == null) {
       versionIteration[major] = 0;
     }
-    if (versionIteration[major] > 2) continue;
 
-    versionIteration[major] += 1;
+    if (versionIteration[major]! > 2) continue;
+
+    versionIteration[major] = versionIteration[major]! + 1;
+
     final isLTS = entry['lts'] != false;
 
     stdout.writeln(entry['version'].substring(1) + (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));

@@ -46,7 +46,7 @@ Future<void> downloadFile(String url, String fileName, String version) async {
   stdout.writeln('Downloading $fileName ' +
       (response.headers['content-length'] == null
           ? ''
-          : '${(int.parse(response.headers['content-length']) / 1e+6).toStringAsFixed(2)} MB)'));
+          : '${(int.parse(response.headers['content-length']!) / 1e+6).toStringAsFixed(2)} MB)'));
 
   response = await http.get(Uri.parse(url));
 

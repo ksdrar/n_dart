@@ -34,6 +34,7 @@ Future<void> installVersion(String versionNumber) async {
     final fileBytes = File(
       path.join(globals.nHome, '.cache', '$downloadName.$downloadExtension'),
     ).readAsBytesSync();
+
     Archive fileDecoder;
 
     switch (downloadExtension) {
@@ -43,6 +44,9 @@ Future<void> installVersion(String versionNumber) async {
       case 'tar.xz':
         fileDecoder = TarDecoder().decodeBytes(fileBytes);
         break;
+      default:
+        stdout.write("Failed to extract contents. Error: file extension doesn't match");
+        return;
     }
 
     for (final file in fileDecoder) {
@@ -70,9 +74,9 @@ Future<void> installVersion(String versionNumber) async {
 
   globals.config.installedVersions[versionNumber] = globals.Version(
       path.join(globals.nHome, 'versions', versionNumber),
-      isActive: globals.config.activeVersion == null);
+      isActive: globals.config.activeVersion == '');
 
-  if (globals.config.activeVersion == null) {
+  if (globals.config.activeVersion == '') {
     stdout.writeln('Setting $versionNumber as active version');
     setAsActive(versionNumber);
   }

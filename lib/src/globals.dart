@@ -2,7 +2,7 @@ class Version {
   bool isActive;
   String path;
 
-  Version(this.path, {this.isActive});
+  Version(this.path, {required this.isActive});
 
   factory Version.fromJson(Map<String, dynamic> json) {
     return Version(json['path'] as String, isActive: json['isActive'] as bool);
@@ -18,7 +18,7 @@ class Config {
   String activeVersion;
   Map<String, Version> installedVersions;
 
-  Config({this.arch, this.activeVersion, this.installedVersions});
+  Config({required this.arch, required this.activeVersion, required this.installedVersions});
 
   factory Config.fromJson(Map<String, dynamic> json) {
     return Config(
@@ -42,6 +42,6 @@ class Config {
   }
 }
 
-String arch;
-String nHome;
-Config config;
+String arch = '';
+String nHome = '';
+Config config = Config(arch: '', activeVersion: '', installedVersions: {});
