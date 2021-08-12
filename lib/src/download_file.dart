@@ -37,19 +37,21 @@ Future<void> downloadFile(String url, String fileName, String version) async {
   var response = await http.head(url);
 
   if (response.statusCode == 404) {
-    throw FileNotAvailable(
-        'Version $version is not available or does not exist');
+    throw FileNotAvailable('Version $version is not available or does not exist');
   } else if (response.statusCode != 200) {
     throw DownloadError('Unexpected error while downloading, try again later');
   }
 
-  stdout.writeln(
-      'Downloading $fileName (${(int.parse(response.headers['content-length']) / 1e+6).toStringAsFixed(2)} MB)');
+  // ignore: prefer_interpolation_to_compose_strings
+  stdout.writeln('Downloading $fileName ' +
+      (response.headers['content-length'] == null
+          ? ''
+          : '${(int.parse(response.headers['content-length']) / 1e+6).toStringAsFixed(2)} MB)'));
+
   response = await http.get(url);
 
   if (response.statusCode == 404) {
-    throw FileNotAvailable(
-        'Version $version is not available or does not exist');
+    throw FileNotAvailable('Version $version is not available or does not exist');
   } else if (response.statusCode != 200) {
     throw DownloadError('Unexpected error while downloading, try again later');
   }
