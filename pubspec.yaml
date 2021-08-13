@@ -4,10 +4,11 @@ description: A simple cross-platform NodeJS version manager.
 # homepage: https://www.example.com
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.13.0 <3.0.0'
 
 dependencies:
   archive: ^3.1.2
+  args: ^2.2.0
   http: ^0.13.3
   path: ^1.7.0
 
