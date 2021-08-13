@@ -34,27 +34,29 @@ Future<void> downloadFile(String url, String fileName, String version) async {
     return;
   }
 
-  var response = await http.head(Uri.parse(url));
+  final client = http.Client();
+  final streamedResponse = await client.send(http.Request('GET', Uri.parse(url)));
 
-  if (response.statusCode == 404) {
+  if (streamedResponse.statusCode == 404) {
     throw FileNotAvailable('Version $version is not available or does not exist');
-  } else if (response.statusCode != 200) {
+  } else if (streamedResponse.statusCode != 200) {
     throw DownloadError('Unexpected error while downloading, try again later');
   }
 
-  // ignore: prefer_interpolation_to_compose_strings
-  stdout.writeln('Downloading $fileName ' +
-      (response.headers['content-length'] == null
-          ? ''
-          : '${(int.parse(response.headers['content-length']!) / 1e+6).toStringAsFixed(2)} MB)'));
+  final sink = file.openWrite();
 
-  response = await http.get(Uri.parse(url));
+  stdout.writeln(
+      'Downloading $fileName (${(streamedResponse.contentLength! / 1e+6).toStringAsFixed(2)} MB)');
 
-  if (response.statusCode == 404) {
-    throw FileNotAvailable('Version $version is not available or does not exist');
-  } else if (response.statusCode != 200) {
-    throw DownloadError('Unexpected error while downloading, try again later');
-  }
+  await streamedResponse.stream.listen(
+    (value) {
+      sink.add(value);
+    },
+    onError: (_) {
+      file.deleteSync();
+      stdout.writeln('Error downloading file');
+    },
+  ).asFuture();
 
-  file.writeAsBytesSync(response.bodyBytes);
+  await sink.close();
 }
