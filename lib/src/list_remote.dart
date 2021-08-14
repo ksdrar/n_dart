@@ -12,24 +12,21 @@ Future<void> listRemote() async {
     return;
   }
 
-  stdout.writeln('Last 3 releases of major NodeJS versions: \n');
+  stdout.writeln('Latest version of every major release (since 8):');
   final remoteVersions = json.decode(request.body) as List<dynamic>;
-  final versionIteration = <String, int>{};
+  var major = -1;
 
   for (final entry in remoteVersions) {
-    final major = entry['version'].substring(1).split('.')[0] as String;
-    if (int.parse(major) < 8) break;
+    final currentMajor = int.parse(entry['version'].substring(1).split('.')[0] as String);
 
-    if (versionIteration[major] == null) {
-      versionIteration[major] = 0;
+    if (currentMajor < 8) continue;
+
+    if (currentMajor == major) {
+      continue;
     }
 
-    if (versionIteration[major]! > 2) continue;
-
-    versionIteration[major] = versionIteration[major]! + 1;
-
+    major = currentMajor;
     final isLTS = entry['lts'] != false;
-
     stdout.writeln(entry['version'].substring(1) + (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));
   }
 }
