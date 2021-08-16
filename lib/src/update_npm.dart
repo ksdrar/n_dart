@@ -56,5 +56,5 @@ Future<void> updateNPM(String versionNumber) async {
     }
   }
 
-  stdout.writeln('npm was successfully updated/downgraded to $versionNumber');
+  stdout.writeln('npm was successfully replaced by version $versionNumber');
 }
