@@ -27,17 +27,16 @@ Future<void> downloadFile(String url, String fileName, String version) async {
     'Downloading $fileName (${(streamedResponse.contentLength! / 1e+6).toStringAsFixed(2)} MB)',
   );
 
-  await streamedResponse.stream.listen(
-    (value) {
+  try {
+    await for (final value in streamedResponse.stream) {
       sink.add(value);
-    },
-    onDone: () async {
-      await sink.close();
-    },
-    onError: (_) async {
-      await sink.close();
-      file.deleteSync();
-      stdout.writeln('Error downloading file');
-    },
-  ).asFuture();
+    }
+  } catch (_) {
+    await sink.close();
+    await file.delete();
+    stdout.writeln('Error downloading file');
+    return;
+  }
+
+  await sink.close();
 }
