@@ -88,7 +88,7 @@ class ListCommand extends Command {
     stdout.writeln('Installed versions:');
     final versionsList = [
       for (final entry in config.installedVersions.entries)
-        entry.key + (entry.value.isActive ? ' - active' : '')
+        entry.key + (entry.key == config.activeVersion ? ' - active' : '')
     ];
     versionsList.sort();
 
@@ -129,6 +129,6 @@ class ReplaceNPMCommand extends Command {
 
   @override
   Future<void> run() async {
-    await updateNPM(argResults!.rest[1]);
+    await updateNPM(argResults!.rest[0]);
   }
 }

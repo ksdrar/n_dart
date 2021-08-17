@@ -23,11 +23,5 @@ void setAsActive(String versionNumber) {
     ),
   );
 
-  // If active version is not null, then change that version isActive property
-  if (config.activeVersion != '') {
-    config.installedVersions[config.activeVersion]!.isActive = false;
-  }
-
-  config.installedVersions[versionNumber]!.isActive = true;
   config.activeVersion = versionNumber;
 }

@@ -73,8 +73,7 @@ Future<void> installVersion(String versionNumber) async {
     return;
   }
 
-  config.installedVersions[versionNumber] =
-      Version(path.join(home, 'versions', versionNumber), isActive: config.activeVersion == '');
+  config.installedVersions[versionNumber] = Version(path.join(home, 'versions', versionNumber));
 
   if (config.activeVersion == '') {
     stdout.writeln('Setting $versionNumber as active version');
