@@ -5,6 +5,7 @@ import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/install_version.dart';
 import 'package:n_dart/src/list_remote.dart';
 import 'package:n_dart/src/set_as_active.dart';
+import 'package:n_dart/src/setup.dart';
 import 'package:n_dart/src/uninstall_version.dart';
 import 'package:n_dart/src/update_npm.dart';
 
@@ -23,6 +24,7 @@ class InstallCommand extends Command {
 
   @override
   Future<void> run() async {
+    setUp();
     await installVersion(argResults!.rest[0]);
     config.saveToDisk();
   }
@@ -43,6 +45,7 @@ class UninstallCommand extends Command {
 
   @override
   void run() {
+    setUp();
     uninstallVersion(argResults!.rest[0]);
     config.saveToDisk();
   }
@@ -60,6 +63,8 @@ class UseCommand extends Command {
 
   @override
   void run() {
+    setUp();
+
     if (!config.installedVersions.containsKey(argResults!.rest[0])) {
       stdout.writeln('Version ${argResults!.rest[0]} is not installed');
       return;
@@ -85,6 +90,13 @@ class ListCommand extends Command {
 
   @override
   void run() {
+    setUp();
+
+    if (config.installedVersions.isEmpty) {
+      stdout.writeln('Nothing is installed');
+      return;
+    }
+
     stdout.writeln('Installed versions:');
     final versionsList = [
       for (final entry in config.installedVersions.entries)
@@ -130,6 +142,8 @@ class ReplaceNPMCommand extends Command {
 
   @override
   Future<void> run() async {
+    setUp();
+
     await updateNPM(argResults!.rest[0]);
   }
 }
