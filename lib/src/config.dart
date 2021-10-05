@@ -9,7 +9,7 @@ String arch = '';
 String activeVersion = '';
 Map<String, Version> installedVersions = {};
 
-void readUserInput() {
+void _readUserInput() {
   const validArchitectures = [
     'x64',
     'x86',
@@ -36,13 +36,15 @@ void readUserInput() {
   }
 
   arch = validArchitectures[selection - 1];
+
+  saveToDisk();
 }
 
 void readFromDisk() {
   final file = File(path.join(home, 'config.json'));
 
   if (!file.existsSync()) {
-    readUserInput();
+    _readUserInput();
   }
 
   final fileAsJson = jsonDecode(file.readAsStringSync());
