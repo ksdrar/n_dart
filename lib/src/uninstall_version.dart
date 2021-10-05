@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:n_dart/src/globals.dart';
+import 'package:n_dart/src/config.dart' as config;
 
 void uninstallVersion(String versionNumber) {
   if (config.installedVersions[versionNumber] == null) {
@@ -8,11 +8,13 @@ void uninstallVersion(String versionNumber) {
     return;
   } else if (config.activeVersion == versionNumber) {
     stdout.writeln(
-        'Version $versionNumber is the current active version, change it before uninstalling it');
+      'Version $versionNumber is the current active version, change it before uninstalling it',
+    );
     return;
   }
 
-  Directory(config.installedVersions[versionNumber]!.path).deleteSync(recursive: true);
+  Directory(config.installedVersions[versionNumber]!.path)
+      .deleteSync(recursive: true);
   config.installedVersions.remove(versionNumber);
   stdout.writeln('Version $versionNumber was successfully uninstalled');
 }

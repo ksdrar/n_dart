@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/download_file.dart';
 import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
@@ -26,7 +27,8 @@ Future<void> updateNPM(String versionNumber) async {
   );
 
   stdout.writeln('Extracting file content');
-  final gZipDecoder = GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
+  final gZipDecoder =
+      GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
     config.installedVersions[config.activeVersion]!.path,

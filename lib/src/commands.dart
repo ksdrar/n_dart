@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:n_dart/src/globals.dart';
+import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/install_version.dart';
 import 'package:n_dart/src/list_remote.dart';
 import 'package:n_dart/src/set_as_active.dart';
@@ -116,7 +116,8 @@ class ListRemoteCommand extends Command {
 
 class ReplaceNPMCommand extends Command {
   @override
-  String get description => 'Replaces the installed npm version with the one typed';
+  String get description =>
+      'Replaces the installed npm version with the one typed';
 
   @override
   String get invocation => 'replace-npm <version>';

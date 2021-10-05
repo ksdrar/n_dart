@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
+import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/download_file.dart';
 import 'package:n_dart/src/globals.dart';
 import 'package:n_dart/src/set_as_active.dart';
@@ -46,7 +47,9 @@ Future<void> installVersion(String versionNumber) async {
         fileDecoder = TarDecoder().decodeBytes(fileBytes);
         break;
       default:
-        stdout.write("Failed to extract contents. Error: file extension doesn't match");
+        stdout.write(
+          "Failed to extract contents. Error: file extension doesn't match",
+        );
         return;
     }
 
@@ -73,7 +76,8 @@ Future<void> installVersion(String versionNumber) async {
     return;
   }
 
-  config.installedVersions[versionNumber] = Version(path.join(home, 'versions', versionNumber));
+  config.installedVersions[versionNumber] =
+      Version(path.join(home, 'versions', versionNumber));
 
   if (config.activeVersion == '') {
     stdout.writeln('Setting $versionNumber as active version');
