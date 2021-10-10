@@ -17,7 +17,8 @@ Future<void> listRemote() async {
   var major = -1;
 
   for (final entry in remoteVersions) {
-    final currentMajor = int.parse(entry['version'].substring(1).split('.')[0] as String);
+    final currentMajor =
+        int.parse(entry['version'].substring(1).split('.')[0] as String);
 
     if (currentMajor < 8) continue;
 
@@ -27,6 +28,8 @@ Future<void> listRemote() async {
 
     major = currentMajor;
     final isLTS = entry['lts'] != false;
-    stdout.writeln(entry['version'].substring(1) + (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''));
+    stdout.writeln(
+      entry['version'].substring(1) + (isLTS ? '\x1b[34m - LTS \x1b[0m' : ''),
+    );
   }
 }

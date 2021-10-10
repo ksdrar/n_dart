@@ -5,7 +5,10 @@ import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 
 Future<List<int>> downloadFile(
-    String url, String fileName, String version) async {
+  String url,
+  String fileName,
+  String version,
+) async {
   final file = File(path.join(home, '.cache', fileName));
 
   if (file.existsSync()) {
