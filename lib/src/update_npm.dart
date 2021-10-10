@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/download_file.dart';
-import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 
 Future<void> updateNPM(String versionNumber) async {
@@ -14,21 +13,19 @@ Future<void> updateNPM(String versionNumber) async {
 
   final url = 'https://registry.npmjs.org/npm/-/npm-$versionNumber.tgz';
 
+  List<int> fileBytes;
+
   try {
-    await downloadFile(url, 'npm-$versionNumber.tgz', versionNumber);
+    fileBytes =
+        await downloadFile(url, 'npm-$versionNumber.tgz', versionNumber);
   } catch (e) {
     stdout.writeln(e.toString());
     exitCode = 2;
     return;
   }
 
-  final downloadedFile = File(
-    path.join(home, '.cache', 'npm-$versionNumber.tgz'),
-  );
-
   stdout.writeln('Extracting file content');
-  final gZipDecoder =
-      GZipDecoder().decodeBytes(downloadedFile.readAsBytesSync());
+  final gZipDecoder = GZipDecoder().decodeBytes(fileBytes);
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
     config.installedVersions[config.activeVersion]!.path,

@@ -21,9 +21,15 @@ Future<void> installVersion(String versionNumber) async {
 
   url += '$versionNumber/$downloadName.$downloadExtension';
 
+  List<int> fileBytes;
+
   // Download file
   try {
-    await downloadFile(url, '$downloadName.$downloadExtension', versionNumber);
+    fileBytes = await downloadFile(
+      url,
+      '$downloadName.$downloadExtension',
+      versionNumber,
+    );
   } catch (e) {
     stdout.writeln(e.toString());
     exitCode = 2;
@@ -33,9 +39,6 @@ Future<void> installVersion(String versionNumber) async {
   // Extract downloaded file
   try {
     stdout.writeln('Extracting file content');
-    final fileBytes = File(
-      path.join(home, '.cache', '$downloadName.$downloadExtension'),
-    ).readAsBytesSync();
 
     Archive fileDecoder;
 
