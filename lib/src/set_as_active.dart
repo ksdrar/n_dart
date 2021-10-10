@@ -20,7 +20,6 @@ void setAsActive(String version) {
   symLink.createSync(
     path.join(
       config.versionPath(version),
-      Platform.isWindows ? '' : 'bin',
     ),
   );
 
