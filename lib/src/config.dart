@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:n_dart/src/globals.dart';
-import 'package:n_dart/src/version.dart';
 import 'package:path/path.dart' as path;
 
 String arch = '';
 String activeVersion = '';
-Map<String, Version> installedVersions = {};
+List<String> installedVersions = [];
+
+bool isVersionInstalled(String version) => installedVersions.contains(version);
+
+String versionPath(String version) => path.join(home, 'versions', version);
 
 void _readUserInput() {
   const validArchitectures = [
@@ -51,11 +54,8 @@ void readFromDisk() {
 
   arch = fileAsJson['arch'] as String;
   activeVersion = fileAsJson['activeVersion'] as String;
-  installedVersions = {
-    for (final entry
-        in (fileAsJson['installedVersions'] as Map<String, dynamic>).entries)
-      entry.key: Version.fromJson(entry.value as Map<String, dynamic>)
-  };
+  installedVersions =
+      List.castFrom<dynamic, String>(fileAsJson['installedVersions'] as List);
 }
 
 void saveToDisk() {
@@ -65,10 +65,7 @@ void saveToDisk() {
         {
           'arch': arch,
           'activeVersion': activeVersion,
-          'installedVersions': <String, dynamic>{
-            for (final entry in installedVersions.entries)
-              entry.key: entry.value.toJson()
-          }
+          'installedVersions': installedVersions
         },
       ),
     );

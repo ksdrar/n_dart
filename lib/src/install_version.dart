@@ -5,21 +5,20 @@ import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/download_file.dart';
 import 'package:n_dart/src/globals.dart';
 import 'package:n_dart/src/set_as_active.dart';
-import 'package:n_dart/src/version.dart';
 import 'package:path/path.dart' as path;
 
-Future<void> installVersion(String versionNumber) async {
-  if (config.installedVersions.containsKey(versionNumber)) {
-    stdout.writeln('Version $versionNumber is already installed');
+Future<void> installVersion(String version) async {
+  if (config.isVersionInstalled(version)) {
+    stdout.writeln('Version $version is already installed');
     return;
   }
 
   var url = 'https://nodejs.org/dist/v';
   final downloadName =
-      '${'node-v$versionNumber-'}${Platform.isWindows ? 'win' : Platform.isLinux ? 'linux' : Platform.isMacOS ? 'darwin' : ''}${'-${config.arch}'}';
+      '${'node-v$version-'}${Platform.isWindows ? 'win' : Platform.isLinux ? 'linux' : Platform.isMacOS ? 'darwin' : ''}${'-${config.arch}'}';
   final downloadExtension = Platform.isWindows ? 'zip' : 'tar.xz';
 
-  url += '$versionNumber/$downloadName.$downloadExtension';
+  url += '$version/$downloadName.$downloadExtension';
 
   List<int> fileBytes;
 
@@ -28,7 +27,7 @@ Future<void> installVersion(String versionNumber) async {
     fileBytes = await downloadFile(
       url,
       '$downloadName.$downloadExtension',
-      versionNumber,
+      version,
     );
   } catch (e) {
     stdout.writeln(e.toString());
@@ -71,7 +70,7 @@ Future<void> installVersion(String versionNumber) async {
     }
 
     Directory(path.join(home, 'versions', downloadName)).renameSync(
-      path.join(home, 'versions', versionNumber),
+      path.join(home, 'versions', version),
     );
   } catch (e) {
     stdout.writeln(e.toString());
@@ -79,13 +78,12 @@ Future<void> installVersion(String versionNumber) async {
     return;
   }
 
-  config.installedVersions[versionNumber] =
-      Version(path.join(home, 'versions', versionNumber));
+  config.installedVersions.add(version);
 
   if (config.activeVersion == '') {
-    stdout.writeln('Setting $versionNumber as active version');
-    setAsActive(versionNumber);
+    stdout.writeln('Setting $version as active version');
+    setAsActive(version);
   }
 
-  stdout.writeln('Version $versionNumber was successfully installed');
+  stdout.writeln('Version $version was successfully installed');
 }

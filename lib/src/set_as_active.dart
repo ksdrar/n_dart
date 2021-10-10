@@ -4,9 +4,9 @@ import 'package:n_dart/src/config.dart' as config;
 import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 
-void setAsActive(String versionNumber) {
-  if (config.installedVersions[versionNumber] == null) {
-    stdout.writeln('Version $versionNumber is not installed');
+void setAsActive(String version) {
+  if (!config.isVersionInstalled(version)) {
+    stdout.writeln('Version $version is not installed');
     return;
   }
 
@@ -19,10 +19,10 @@ void setAsActive(String versionNumber) {
 
   symLink.createSync(
     path.join(
-      config.installedVersions[versionNumber]!.path,
+      config.versionPath(version),
       Platform.isWindows ? '' : 'bin',
     ),
   );
 
-  config.activeVersion = versionNumber;
+  config.activeVersion = version;
 }

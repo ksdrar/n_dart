@@ -2,19 +2,18 @@ import 'dart:io';
 
 import 'package:n_dart/src/config.dart' as config;
 
-void uninstallVersion(String versionNumber) {
-  if (config.installedVersions[versionNumber] == null) {
-    stdout.writeln('Version $versionNumber is not installed');
+void uninstallVersion(String version) {
+  if (!config.isVersionInstalled(version)) {
+    stdout.writeln('Version $version is not installed');
     return;
-  } else if (config.activeVersion == versionNumber) {
+  } else if (config.activeVersion == version) {
     stdout.writeln(
-      'Version $versionNumber is the current active version, change it before uninstalling it',
+      'Version $version is the current active version, change it before uninstalling it',
     );
     return;
   }
 
-  Directory(config.installedVersions[versionNumber]!.path)
-      .deleteSync(recursive: true);
-  config.installedVersions.remove(versionNumber);
-  stdout.writeln('Version $versionNumber was successfully uninstalled');
+  Directory(config.versionPath(version)).deleteSync(recursive: true);
+  config.installedVersions.remove(version);
+  stdout.writeln('Version $version was successfully uninstalled');
 }

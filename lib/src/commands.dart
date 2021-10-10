@@ -65,7 +65,7 @@ class UseCommand extends Command {
   void run() {
     setUp();
 
-    if (!config.installedVersions.containsKey(argResults!.rest[0])) {
+    if (!config.isVersionInstalled(argResults!.rest[0])) {
       stdout.writeln('Version ${argResults!.rest[0]} is not installed');
       return;
     } else if (argResults!.rest[0] == config.activeVersion) {
@@ -99,8 +99,8 @@ class ListCommand extends Command {
 
     stdout.writeln('Installed versions:');
     final versionsList = [
-      for (final entry in config.installedVersions.entries)
-        entry.key + (entry.key == config.activeVersion ? ' - active' : '')
+      for (final version in config.installedVersions)
+        version + (version == config.activeVersion ? ' - active' : '')
     ];
     versionsList.sort();
 

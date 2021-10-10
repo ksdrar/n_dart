@@ -28,7 +28,7 @@ Future<void> updateNPM(String versionNumber) async {
   final gZipDecoder = GZipDecoder().decodeBytes(fileBytes);
   final tarDecoder = TarDecoder().decodeBytes(gZipDecoder);
   final npmPath = path.join(
-    config.installedVersions[config.activeVersion]!.path,
+    config.versionPath(config.activeVersion),
     Platform.isWindows ? '' : 'bin',
     'node_modules',
     'npm',
