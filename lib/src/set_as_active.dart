@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:n_dart/src/config.dart' as config;
-import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
+
+import 'config.dart' as config;
 
 void setAsActive(String version) {
   if (!config.isVersionInstalled(version)) {
@@ -10,7 +10,7 @@ void setAsActive(String version) {
     return;
   }
 
-  final symLink = Link(path.join(home, 'bin'));
+  final symLink = Link(path.join(config.home, 'bin'));
 
   // Delete symlink if it already exists
   if (symLink.existsSync()) {

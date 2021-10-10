@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:n_dart/src/config.dart' as config;
-import 'package:n_dart/src/install_version.dart';
-import 'package:n_dart/src/list_remote.dart';
-import 'package:n_dart/src/set_as_active.dart';
-import 'package:n_dart/src/setup.dart';
-import 'package:n_dart/src/uninstall_version.dart';
-import 'package:n_dart/src/update_npm.dart';
+
+import 'config.dart' as config;
+import 'install_version.dart';
+import 'list_remote.dart';
+import 'set_as_active.dart';
+import 'setup.dart';
+import 'uninstall_version.dart';
+import 'update_npm.dart';
 
 class InstallCommand extends Command {
   @override

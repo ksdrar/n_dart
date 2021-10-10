@@ -1,12 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
 
+String home = '';
 String arch = '';
 String activeVersion = '';
 List<String> installedVersions = [];
+
+void parseNHome() {
+  if (Platform.environment['N_HOME'] == null) {
+    throw Exception('N_HOME is not defined');
+  }
+
+  home = Platform.environment['N_HOME']!;
+}
 
 bool isVersionInstalled(String version) => installedVersions.contains(version);
 

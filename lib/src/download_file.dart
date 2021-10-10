@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:n_dart/src/globals.dart';
 import 'package:path/path.dart' as path;
+
+import 'config.dart' as config;
 
 Future<List<int>> downloadFile(
   String url,
   String fileName,
   String version,
 ) async {
-  final file = File(path.join(home, '.cache', fileName));
+  final file = File(path.join(config.home, '.cache', fileName));
 
   if (file.existsSync()) {
     stdout.writeln('Cached file found.');
