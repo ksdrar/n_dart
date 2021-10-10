@@ -14,16 +14,8 @@ Future<void> updateNPM(String versionNumber) async {
 
   final url = 'https://registry.npmjs.org/npm/-/npm-$versionNumber.tgz';
 
-  List<int> fileBytes;
-
-  try {
-    fileBytes =
-        await downloadFile(url, 'npm-$versionNumber.tgz', versionNumber);
-  } catch (e) {
-    stdout.writeln(e.toString());
-    exitCode = 2;
-    return;
-  }
+  final fileBytes =
+      await downloadFile(url, 'npm-$versionNumber.tgz', versionNumber);
 
   stdout.writeln('Extracting file content');
   final gZipDecoder = GZipDecoder().decodeBytes(fileBytes);
@@ -40,17 +32,17 @@ Future<void> updateNPM(String versionNumber) async {
   }
 
   for (final file in tarDecoder) {
-    file.name = file.name.replaceFirst('package/', '');
+    final fileName = file.name.replaceFirst('package/', '');
 
     if (file.isFile) {
       File(
-        path.join(npmPath, file.name),
+        path.join(npmPath, fileName),
       )
         ..createSync(recursive: true)
         ..writeAsBytesSync(file.content as List<int>);
     } else {
       Directory(
-        path.join(npmPath, file.name),
+        path.join(npmPath, fileName),
       ).createSync(recursive: true);
     }
   }

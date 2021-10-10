@@ -12,9 +12,9 @@ Future<void> main(List<String> args) async {
     ..addCommand(ListRemoteCommand())
     ..addCommand(ReplaceNPMCommand());
 
-  commandRunner.run(args).catchError((err) {
-    if (err is! UsageException) throw err as Object;
-
-    stdout.writeln(err);
-  });
+  try {
+    await commandRunner.run(args);
+  } on UsageException catch (e) {
+    stdout.writeln(e);
+  }
 }

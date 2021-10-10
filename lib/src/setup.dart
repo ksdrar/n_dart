@@ -5,12 +5,7 @@ import 'package:path/path.dart' as path;
 import 'config.dart' as config;
 
 void setUp() {
-  try {
-    config.parseNHome();
-  } catch (e) {
-    stdout.writeln(e);
-    return;
-  }
+  config.parseNHome();
 
   config.readFromDisk();
 

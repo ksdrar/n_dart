@@ -17,9 +17,7 @@ Future<void> installVersion(String version) async {
   final downloadName = 'node-v$version-win-${config.arch}';
   const downloadExtension = 'zip';
 
-  List<int> fileBytes;
-
-  fileBytes = await downloadFile(
+  final fileBytes = await downloadFile(
     '$url$version/$downloadName.$downloadExtension',
     '$downloadName.$downloadExtension',
     version,

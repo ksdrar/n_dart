@@ -67,17 +67,13 @@ void readFromDisk() {
 }
 
 void saveToDisk() {
-  try {
-    File(path.join(home, 'config.json')).writeAsStringSync(
-      jsonEncode(
-        {
-          'arch': arch,
-          'activeVersion': activeVersion,
-          'installedVersions': installedVersions
-        },
-      ),
-    );
-  } catch (e) {
-    stdout.writeln('Unexpected error while saving config');
-  }
+  File(path.join(home, 'config.json')).writeAsStringSync(
+    jsonEncode(
+      {
+        'arch': arch,
+        'activeVersion': activeVersion,
+        'installedVersions': installedVersions
+      },
+    ),
+  );
 }
