@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:n_dart/src/config.dart' as config;
-import 'package:n_dart/src/download_file.dart';
 import 'package:path/path.dart' as path;
+
+import 'config.dart' as config;
+import 'download_file.dart';
 
 Future<void> updateNPM(String versionNumber) async {
   if (config.activeVersion == '') {
