@@ -18,9 +18,8 @@ Future<void> listRemote() async {
 
   final versions = <String>[];
 
-  for (final entry in remoteVersions) {
-    final currentMajor =
-        int.parse(entry['version'].substring(1).split('.')[0] as String);
+  for (final entry in List.castFrom<dynamic, Map<String, dynamic>>(remoteVersions)) {
+    final currentMajor = int.parse((entry['version'] as String).substring(1).split('.')[0]);
 
     if (currentMajor < 8) break;
 
@@ -32,8 +31,7 @@ Future<void> listRemote() async {
     final isLTS = entry['lts'] != false;
 
     versions.add(
-      (entry['version'] as String).substring(1) +
-          (isLTS ? colors.green(' - LTS') : ''),
+      (entry['version'] as String).substring(1) + (isLTS ? colors.green(' - LTS') : ''),
     );
   }
 

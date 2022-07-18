@@ -21,14 +21,7 @@ bool isVersionInstalled(String version) => installedVersions.contains(version);
 String versionPath(String version) => path.join(home, 'versions', version);
 
 void _readUserInput() {
-  const validArchitectures = [
-    'x64',
-    'x86',
-    'arm64',
-    'armv7l',
-    'ppc64le',
-    's390x'
-  ];
+  const validArchitectures = ['x64', 'x86', 'arm64', 'armv7l', 'ppc64le', 's390x'];
 
   stdout.writeln('Select your architecture:');
   stdout.writeln(
@@ -58,22 +51,17 @@ void readFromDisk() {
     _readUserInput();
   }
 
-  final fileAsJson = jsonDecode(file.readAsStringSync());
+  final fileAsJson = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
 
   arch = fileAsJson['arch'] as String;
   activeVersion = fileAsJson['activeVersion'] as String;
-  installedVersions =
-      List.castFrom<dynamic, String>(fileAsJson['installedVersions'] as List);
+  installedVersions = List.castFrom<dynamic, String>(fileAsJson['installedVersions'] as List);
 }
 
 void saveToDisk() {
   File(path.join(home, 'config.json')).writeAsStringSync(
     jsonEncode(
-      {
-        'arch': arch,
-        'activeVersion': activeVersion,
-        'installedVersions': installedVersions
-      },
+      {'arch': arch, 'activeVersion': activeVersion, 'installedVersions': installedVersions},
     ),
   );
 }

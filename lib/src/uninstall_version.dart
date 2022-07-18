@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'config.dart' as config;
+import 'package:n_dart/src/config.dart' as config;
 
 void uninstallVersion(String version) {
   if (!config.isVersionInstalled(version)) {

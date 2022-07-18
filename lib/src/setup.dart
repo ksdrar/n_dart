@@ -1,8 +1,7 @@
 import 'dart:io';
 
+import 'package:n_dart/src/config.dart' as config;
 import 'package:path/path.dart' as path;
-
-import 'config.dart' as config;
 
 void setUp() {
   config.parseNHome();

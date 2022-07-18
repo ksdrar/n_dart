@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:n_dart/src/config.dart' as config;
 import 'package:path/path.dart' as path;
-
-import 'config.dart' as config;
 
 Future<List<int>> downloadFile(
   String url,
@@ -18,8 +17,7 @@ Future<List<int>> downloadFile(
   }
 
   final client = http.Client();
-  final streamedResponse =
-      await client.send(http.Request('GET', Uri.parse(url)));
+  final streamedResponse = await client.send(http.Request('GET', Uri.parse(url)));
 
   if (streamedResponse.statusCode == 404) {
     throw Exception('Version $version is not available or does not exist');
