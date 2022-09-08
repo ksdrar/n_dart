@@ -9,6 +9,14 @@ void setAsActive(String version) {
     return;
   }
 
+  {
+    final dir = Directory(path.join(config.home, 'bin'));
+
+    if (dir.existsSync()) {
+      dir.deleteSync();
+    }
+  }
+
   final symLink = Link(path.join(config.home, 'bin'));
 
   // Delete symlink if it already exists
@@ -16,11 +24,7 @@ void setAsActive(String version) {
     symLink.deleteSync();
   }
 
-  symLink.createSync(
-    path.join(
-      config.versionPath(version),
-    ),
-  );
+  symLink.createSync(path.join(config.versionPath(version)));
 
   config.activeVersion = version;
 }

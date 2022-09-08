@@ -22,6 +22,14 @@ Future<void> installVersion(String version) async {
     version,
   );
 
+  {
+    final destinationDir = Directory(path.join(config.home, 'versions', version));
+
+    if (destinationDir.existsSync()) {
+      destinationDir.deleteSync();
+    }
+  }
+
   stdout.writeln('Extracting file content');
 
   final fileDecoder = ZipDecoder().decodeBytes(fileBytes);
